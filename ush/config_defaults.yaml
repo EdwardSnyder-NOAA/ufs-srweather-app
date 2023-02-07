@@ -393,7 +393,8 @@ platform:
   #-----------------------------------------------------------------------
   #
   EXTRN_MDL_DATA_STORES: ""
-
+  
+  LIGHTNING_ROOT: ""
 #-----------------------------
 # WORKFLOW config parameters
 #-----------------------------
@@ -937,6 +938,12 @@ nco:
   MAILTO: ""
   MAILCC: ""
 
+#---------------------------------
+# Start times for different setups
+#---------------------------------
+start_time:
+  START_TIME_LIGHTNINGNC: 00:45:00
+
 
 #----------------------------
 # WORKFLOW SWITCHES config parameters
@@ -1036,6 +1043,8 @@ workflow_switches:
   RUN_TASK_VX_ENSPOINT: false
 
   RUN_TASK_PLOT_ALLVARS: false
+
+  RUN_TASK_PROCESS_LIGHTNING: false
 #----------------------------
 # MAKE GRID config parameters
 #-----------------------------
@@ -2211,6 +2220,16 @@ task_plot_allvars:
   #-----------------------------------
   PLOT_FCST_END: ""
 
+#----------------------------
+#  PROCESS LIGHTNING config parameters
+#-----------------------------
+task_process_lightning:
+ PROCESS_LIGHTNING_TN: "process_lightning"
+ NNODES_PROCESS_LIGHTNING: 1
+ PPN_PROCESS_LIGHTNING: 1
+ MEM_PROCESS_LIGHTNING: 2G
+ WTIME_PROCESS_LIGHTNING: 00:30:00
+ MAXTRIES_PROCESS_LIGHTNING: 1
 
 #----------------------------
 # global config parameters
@@ -2370,3 +2389,14 @@ global:
   #
   #-----------------------------------------------------------------------
   #
+  # Parameters for analysis options
+  # DO_NLDN_LGHT:
+  # Flag turn on processing NLDN NetCDF lightning data
+  #
+  #-----------------------------------------------------------------------
+  #  
+  DO_NLDN_LGHT: false
+  #
+  #-----------------------------------------------------------------------
+  #
+ 
