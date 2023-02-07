@@ -36,6 +36,8 @@ Workflow task names.
 <!ENTITY MAKE_LBCS_TN              "{{ make_lbcs_tn }}">
 <!ENTITY RUN_FCST_TN               "{{ run_fcst_tn }}">
 <!ENTITY RUN_POST_TN               "{{ run_post_tn }}">
+
+<!ENTITY PROCESS_LIGHTNING_TN      "{{ process_lightning_tn }}">
 <!ENTITY GET_OBS                   "{{ get_obs }}">
 <!ENTITY GET_OBS_CCPA_TN           "{{ get_obs_ccpa_tn }}">
 <!ENTITY GET_OBS_NDAS_TN           "{{ get_obs_ndas_tn }}">
@@ -150,6 +152,15 @@ tasks; and the "FCST" type is used for the RUN_FCST_TN task.
 {%- else %}
 <!ENTITY RSRV_FCST    "<account>&ACCOUNT;</account><queue>&QUEUE_FCST;</queue>">
 {%- endif %}
+
+<!ENTITY START_TIME_SPINUP "{{ start_time_spinup }}">
+<!ENTITY START_TIME_PROD "{{ start_time_prod }}">
+<!ENTITY START_TIME_CONVENTIONAL_SPINUP "{{ start_time_conventional_spinup }}">
+<!ENTITY START_TIME_LATE_ANALYSIS "{{ start_time_late_analysis }}">
+<!ENTITY START_TIME_CONVENTIONAL "{{ start_time_conventional }}">
+<!ENTITY START_TIME_NSSLMOSIAC   "{{ start_time_nsslmosiac }}">
+<!ENTITY START_TIME_LIGHTNINGNC  "{{ start_time_lightningnc }}">
+<!ENTITY START_TIME_PROCSMOKE  "{{ start_time_procsmoke }}">
 
 ]>
 
@@ -453,6 +464,44 @@ MODULES_RUN_TASK_FP script.
           <datadep age="00:00:00:05">&EXPTDIR;/sfc_climo/&MAKE_SFC_CLIMO_TN;&CMPEXT;</datadep>
           <streq><left>&RUN_TASK_MAKE_SFC_CLIMO;</left><right>FALSE</right></streq>
         </or>
+      </and>
+    </dependency>
+
+  </task>
+{%- endif %}
+{%- if do_nldn_lght %}
+<!--
+     ************************************************************************
+************************************************************************
+-->
+  <task name="&PROCESS_LIGHTNING_TN;_#type#" cycledefs="#cycledefs#"  maxtries="{{ maxtries_process_lightning }}">
+
+    &RSRV_DEFAULT;
+    &WALL_LIMIT_ANAL;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_ANAL_TN;" "&JOBSdir;/JREGIONAL_PROCESS_LIGHTNING"</command>
+
+    <nodes>{{ nnodes_process_lightning }}:ppn={{ ppn_process_lightning }};</nodes>
+    <walltime>{{ wtime_process_lightning }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <native>&SCHED_NATIVE_CMD;</native>
+
+    <jobname>&TAG;&PROCESS_LIGHTNING_TN;_#type#</jobname>
+    <join>&LOGDIR;/&PROCESS_LIGHTNING_TN;_#type#<cyclestr>_@Y@m@d@H</cyclestr>&LOGEXT;</join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>subcyc</name><value><cyclestr>@M</cyclestr></value></envar>
+    <envar><name>LOGDIR</name><value>&LOGDIR;</value></envar>
+
+    <envar><name>CYCLE_TYPE</name><value><cyclestr>#type#</cyclestr></value></envar>
+    <envar><name>CYCLE_SUBTYPE</name><value><cyclestr></cyclestr></value></envar>
+
+    <dependency>
+      <and>
+        <timedep><cyclestr offset="&START_TIME_LIGHTNINGNC;">@Y@m@d@H@M00</cyclestr></timedep>
       </and>
     </dependency>
 
