@@ -12,6 +12,7 @@
 # Instructions:		1. Pass the appropriate info for the required arguments:
 #                              --fcst_dir=/path/to/forecast/files
 #                              --fcst_len=<forecast length as Int>
+#                              --test_type=<ufs_files || upp_files>
 #                       2. Run script with arguments
 #
 # Notes/future work:    - Currently SRW App only accepts netcdf as the UFS WM 
@@ -32,18 +33,19 @@ import sys
 import logging
 import argparse
 import unittest
+import yaml
 
 # --------------Define some functions ------------------#
 
 
 class TestExptFiles(unittest.TestCase):
-    fcst_dir = ''
+    file_path = ''
     filename_list = ''
 
     def test_fcst_files(self):
  
         for filename in self.filename_list:
-            filename_fp = "{0}/{1}".format(self.fcst_dir, filename)
+            filename_fp = "{0}/{1}".format(self.file_path, filename)
 
             logging.info("Checking existence of: {0}".format(filename_fp))
             err_msg = "Missing file: {0}".format(filename_fp)
@@ -78,6 +80,11 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
+        "--test_type",
+        help="Indicate which test to run: ufs_files or upp_files",
+        required=True,
+    )
+    parser.add_argument(
         "--fcst_inc",
         default="1",
         help="Increment of forecast in hours.",
@@ -95,27 +102,56 @@ if __name__ == "__main__":
    
     fcst_dir = str(args.fcst_dir) 
     fcst_len = int(args.fcst_len)
+    test_type = str(args.test_type)
     fcst_inc = int(args.fcst_inc)
 
     # Start logger
     setup_logging()
 
-    # Check if model_configure exists
-    model_configure_fp = "{0}/model_configure".format(fcst_dir)
+    if test_type == 'ufs_files':
+        # Check if model_configure exists
+        model_configure_fp = "{0}/model_configure".format(fcst_dir)
 
-    if not os.path.isfile(model_configure_fp):
-        logging.error("Experiments model_configure file is missing! Exiting!")
-        sys.exit(1)
+        if not os.path.isfile(model_configure_fp):
+            logging.error("Experiments model_configure file is missing! Exiting!")
+            sys.exit(1)
 
-    # Loop through model_configure file to find the netcdf base names
-    f = open(model_configure_fp, 'r')
+        # Loop through model_configure file to find the netcdf base names
+        f = open(model_configure_fp, 'r')
 
-    for line in f:
-        if line.startswith("filename_base"):
-            filename_base_1 = line.split("'")[1]
-            filename_base_2 = line.split("'")[3]
-            break
-    f.close()
+        for line in f:
+            if line.startswith("filename_base"):
+                filename_base_1 = line.split("'")[1]
+                filename_base_2 = line.split("'")[3]
+                break
+        f.close()
+        
+        # Define file name template and file path
+        filename_template = "{0}f{1}.nc"
+        file_path = fcst_dir
+         
+    if test_type == 'upp_files':
+        # Check if var_defns.yaml exists
+        var_defn_fp = "{0}/../var_defns.yaml".format(fcst_dir)
+
+        if not os.path.isfile(var_defn_fp):
+            logging.error("Experiments var_defns.sh file is missing! Exiting!")
+            sys.exit(1)
+        
+        # Load var_defns.yaml file
+        with open(var_defn_fp) as f:
+            var_defn_dict = yaml.safe_load(f)
+        
+        # Define base names, file name template, and file path
+        domain = var_defn_dict['nco']['NET_default']
+        grid = var_defn_dict['task_run_post']['POST_OUTPUT_DOMAIN_NAME']
+        cyc = var_defn_dict['workflow']['DATE_FIRST_CYCL'][8:10]
+        
+        filename_base_1 = "nat"
+        filename_base_2 = "prs"
+        
+        filename_template = "".join([domain,".t",cyc,"z.{0}lev.f{1}.",grid,".grib2"])
+        file_path = "{0}/postprd".format(fcst_dir)
 
     # Create list of expected filenames from the experiment
     fcst_len = fcst_len + 1
@@ -123,12 +159,12 @@ if __name__ == "__main__":
 
     for x in range(0, fcst_len, fcst_inc):
         fhour = str(x).zfill(3)
-        filename_1 = "{0}f{1}.nc".format(filename_base_1, fhour)
-        filename_2 = "{0}f{1}.nc".format(filename_base_2, fhour)
+        filename_1 = filename_template.format(filename_base_1, fhour)
+        filename_2 = filename_template.format(filename_base_2, fhour)
         filename_list.append(filename_1)
         filename_list.append(filename_2)
 
     # Call unittest class 
-    TestExptFiles.fcst_dir = fcst_dir
+    TestExptFiles.file_path = file_path
     TestExptFiles.filename_list = filename_list
     unittest.main()
