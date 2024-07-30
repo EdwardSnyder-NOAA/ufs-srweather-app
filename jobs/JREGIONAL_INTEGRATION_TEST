@@ -86,7 +86,6 @@ if [ "${RUN_ENVIR}" != "nco" ]; then
 else
   export fcst_dir="${FCST_DIR}"
 fi
-echo ${TEST_TYPE}
 #
 #-----------------------------------------------------------------------
 #
