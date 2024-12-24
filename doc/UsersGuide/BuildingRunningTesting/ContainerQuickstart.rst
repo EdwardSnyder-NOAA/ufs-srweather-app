@@ -200,58 +200,24 @@ Generate the Forecast Experiment
 =================================
 To generate the forecast experiment, users must:
 
-#. :ref:`Activate the workflow <SetUpPythonEnvC>`
+#. :ref:`Stage the container <SetUpCont>`
 #. :ref:`Set experiment parameters to configure the workflow <SetUpConfigFileC>`
 #. :ref:`Run a script to generate the experiment workflow <GenerateWorkflowC>`
 
 The first two steps depend on the platform being used and are described here for Level 1 platforms. Users will need to adjust the instructions to match their machine configuration if their local machine is a Level 2-4 platform. 
 
-.. _SetUpPythonEnvC:
+.. _SetUpCont:
 
-Activate the Workflow
+Stage the container 
 ------------------------
 
-Copy the container's modulefiles to the local working directory so that the files can be accessed outside of the container:
-
-.. code-block:: console
-
-   singularity exec -B /<local_base_dir>:/<container_dir> $img cp -r /opt/ufs-srweather-app/modulefiles .
-
-After this command runs, the local working directory should contain the ``modulefiles`` directory. 
-
-To activate the workflow, run the following commands: 
-
-.. code-block:: console
-
-   module use /path/to/modulefiles
-   module load wflow_<platform>
-
-where: 
-
-   * ``/path/to/modulefiles`` is replaced with the actual path to the modulefiles on the user's local system (often ``$PWD/modulefiles``), and 
-   * ``<platform>`` is a valid, lowercased machine/platform name (see the ``MACHINE`` variable in :numref:`Section %s <user>`). 
-
-The ``wflow_<platform>`` modulefile will then output instructions to activate the workflow. The user should run the commands specified in the modulefile output. For example, if the output says: 
-
-.. code-block:: console
-
-   Please do the following to activate conda:
-       > conda activate workflow_tools
-
-then the user should run |activate|. This will activate the |wflow_env| conda environment. The command(s) will vary from system to system, but the user should see |prompt| in front of the Terminal prompt at this point.
-
-.. _SetUpConfigFileC: 
-
-Configure the Workflow
----------------------------
-
-Run ``stage-srw.sh``:
+To set up the container with your host system, run ``stage-srw.sh`` script:
 
 .. code-block:: console
 
    ./stage-srw.sh -c=<compiler> -m=<mpi_implementation> -p=<platform> -i=$img
 
-where: 
+where:
 
    * ``-c`` indicates the compiler on the user's local machine (e.g., ``intel/2022.1.2``)
    * ``-m`` indicates the :term:`MPI` on the user's local machine (e.g., ``impi/2022.1.2``)
@@ -268,9 +234,24 @@ For example, on Hera, the command would be:
 
    The user must have an Intel compiler and MPI on their system because the container uses an Intel compiler and MPI. Intel compilers are now available for free as part of the `Intel oneAPI Toolkit <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__.
 
-After this command runs, the working directory should contain ``srw.sh``, a ``ufs-srweather-app`` directory, and an ``ush`` directory.
+After this command runs, the working directory should contain the ``srw.sh`` script and a ``ufs-srweather-app`` directory.
 
-.. COMMENT: Check that the above is true for the dev containers...
+.. _SetUpConfigFileC:
+
+Configure the Workflow
+---------------------------
+
+Configuring the workflow for the container is similar to configuring the workflow without a container. The only exception is that there is no need to activate the ``srw_app`` conda environment. That is because there is a conflict between the container's conda and the host’s conda. To get around this, the container’s conda environment bin directory is appended to the system’s ``PATH`` variable in the ``python_srw.lua`` and ``build_<platform>_intel.lua`` modulefiles with the ``stage-srw.sh`` script. Activate the workflow by running the following commands: 
+
+.. code-block:: console
+
+   module use ufs-srweather-app/modulefiles
+   module load wflow_<platform>
+
+where: 
+
+   * ``<platform>`` is a valid, lowercased machine/platform name (see the ``MACHINE`` variable in :numref:`Section %s <user>`). 
+
 
 From here, users can follow the steps below to configure the out-of-the-box SRW App case with an automated Rocoto workflow. For more detailed instructions on experiment configuration, users can refer to :numref:`Section %s <UserSpecificConfig>`. 
 
