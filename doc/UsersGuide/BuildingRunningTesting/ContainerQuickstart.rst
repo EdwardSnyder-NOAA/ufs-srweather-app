@@ -172,11 +172,11 @@ The list of directories printed will be similar to this:
 
 .. code-block:: console
 
-   bin      discover       lfs   lib     media  run         singularity    usr
-   boot     environment    lfs1  lib32   mnt    sbin        srv            var
-   contrib  etc            lfs2  lib64   opt    scratch     sys            work
-   data     glade          lfs3  libx32  proc   scratch1    tmp
-   dev      home           lfs4  lustre  root   scratch2    u
+   bin      discover     home  lfs4    lustre  root      scratch2                  tmp
+   boot     environment  lfs   lib     media   run       singularity               u
+   contrib  etc          lfs1  lib32   mnt     sbin      srv                       usr
+   data     glade        lfs2  lib64   opt     scratch   sys                       var
+   dev      gpfs         lfs3  libx32  proc    scratch1  third-party-programs.txt  work
 
 Users can run ``exit`` to exit the shell. 
 
