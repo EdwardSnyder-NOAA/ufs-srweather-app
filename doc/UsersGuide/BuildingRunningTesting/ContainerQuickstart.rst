@@ -82,9 +82,9 @@ On most Level 1 systems, a container named ``ubuntu22.04-intel-ue-1.6.0-srw-dev.
      - /scratch1/NCEPDEV/nems/role.epic/containers
    * - Jet
      - /mnt/lfs5/HFIP/hfv3gfs/role.epic/containers
-   * - NOAA Cloud
+   * - NOAA Cloud [#fn]_
      - /contrib/EPIC/containers
-   * - Orion/Hercules [#fn]_
+   * - Orion/Hercules
      - /work/noaa/epic/role-epic/contrib/containers
 
 .. [#fn] On these systems, container testing shows inconsistent results. 
@@ -131,7 +131,7 @@ Some users may prefer to issue the command without the ``sudo`` prefix. Whether 
 
    .. code-block:: console
 
-      sudo singularity build --sandbox ubuntu22.04-intel-ue-1.6.0-srw-dev docker://noaaepic/ubuntu20.04-intel-srwapp:release-public-v2.2.0
+      sudo singularity build --sandbox ubuntu20.04-intel-srwapp-release-public-v2.2.0 docker://noaaepic/ubuntu20.04-intel-srwapp:release-public-v2.2.0
 
 For easier reference, users can set an environment variable to point to the container: 
 
@@ -208,10 +208,10 @@ The first two steps depend on the platform being used and are described here for
 
 .. _SetUpCont:
 
-Stage the container 
+Stage the Container 
 ------------------------
 
-To set up the container with your host system, run ``stage-srw.sh`` script:
+To set up the container with your host system, run the ``stage-srw.sh`` script:
 
 .. code-block:: console
 
