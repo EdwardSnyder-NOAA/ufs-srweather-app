@@ -66,7 +66,7 @@ Build the Container
 Level 1 Systems
 ^^^^^^^^^^^^^^^^^^
 
-On most Level 1 systems, a container named ``ubuntu20.04-intel-ue-1.4.1-srw-dev.img`` has already been built at the following locations:
+On most Level 1 systems, a container named ``ubuntu22.04-intel-ue-1.6.0-srw-dev.img`` has already been built at the following locations:
 
 .. list-table:: Locations of pre-built containers
    :widths: 20 50
@@ -77,7 +77,7 @@ On most Level 1 systems, a container named ``ubuntu20.04-intel-ue-1.4.1-srw-dev.
    * - Derecho [#fn]_
      - /glade/work/epicufsrt/contrib/containers
    * - Gaea [#fn]_
-     - /lustre/f2/dev/role.epic/containers
+     - /gpfs/f5/epic/world-shared/containers
    * - Hera
      - /scratch1/NCEPDEV/nems/role.epic/containers
    * - Jet
@@ -97,20 +97,20 @@ Users can simply set an environment variable to point to the container:
 
 .. code-block:: console
 
-   export img=/path/to/ubuntu20.04-intel-ue-1.4.1-srw-dev.img
+   export img=/path/to/ubuntu22.04-intel-ue-1.6.0-srw-dev.img
 
 Users may convert the container ``.img`` file to a writable sandbox:
 
 .. code-block:: console
 
-   singularity build --sandbox ubuntu20.04-intel-srwapp $img
+   singularity build --sandbox ubuntu22.04-intel-srwapp $img
 
 When making a writable sandbox on Level 1 systems, the following warnings commonly appear and can be ignored:
 
 .. code-block:: console
 
    INFO:    Starting build...
-   INFO:    Verifying bootstrap image ubuntu20.04-intel-ue-1.4.1-srw-dev.img
+   INFO:    Verifying bootstrap image ubuntu22.04-intel-ue-1.6.0-srw-dev.img
    WARNING: integrity: signature not found for object group 1
    WARNING: Bootstrap image could not be verified, but build will continue.
 
@@ -123,7 +123,7 @@ On non-Level 1 systems, users should build the container in a writable sandbox:
 
 .. code-block:: console
 
-   sudo singularity build --sandbox ubuntu20.04-intel-srwapp docker://noaaepic/ubuntu20.04-intel-srwapp:develop
+   sudo singularity build --sandbox ubuntu22.04-intel-srwapp docker://noaaepic/ubuntu22.04-intel-srwapp:develop
 
 Some users may prefer to issue the command without the ``sudo`` prefix. Whether ``sudo`` is required is system-dependent. 
 
@@ -132,13 +132,13 @@ Some users may prefer to issue the command without the ``sudo`` prefix. Whether 
 
    .. code-block:: console
 
-      sudo singularity build --sandbox ubuntu20.04-intel-srwapp docker://noaaepic/ubuntu20.04-intel-srwapp:release-public-v2.2.0
+      sudo singularity build --sandbox ubuntu22.04-intel-srwapp docker://noaaepic/ubuntu22.04-intel-srwapp:release-public-v2.2.0
 
 For easier reference, users can set an environment variable to point to the container: 
 
 .. code-block:: console
 
-   export img=/path/to/ubuntu20.04-intel-srwapp
+   export img=/path/to/ubuntu22.04-intel-srwapp
 
 .. _RunContainer:
 
@@ -257,13 +257,13 @@ where:
    * ``-c`` indicates the compiler on the user's local machine (e.g., ``intel/2022.1.2``)
    * ``-m`` indicates the :term:`MPI` on the user's local machine (e.g., ``impi/2022.1.2``)
    * ``<platform>`` refers to the local machine (e.g., ``hera``, ``jet``, ``noaacloud``, ``macos``, ``linux``). See ``MACHINE`` in :numref:`Section %s <user>` for a full list of options.
-   * ``-i`` indicates the container image that was built in :numref:`Step %s <BuildC>` (``ubuntu20.04-intel-srwapp`` or ``ubuntu20.04-intel-ue-1.4.1-srw-dev.img`` by default).
+   * ``-i`` indicates the container image that was built in :numref:`Step %s <BuildC>` (``ubuntu22.04-intel-srwapp`` or ``ubuntu22.04-intel-ue-1.6.0-srw-dev.img`` by default).
 
 For example, on Hera, the command would be:
 
 .. code-block:: console
 
-   ./stage-srw.sh -c=intel/2022.1.2 -m=impi/2022.1.2 -p=hera -i=ubuntu20.04-intel-ue-1.4.1-srw-dev.img
+   ./stage-srw.sh -c=intel/2022.1.2 -m=impi/2022.1.2 -p=hera -i=ubuntu22.04-intel-ue-1.6.0-srw-dev.img
 
 .. attention::
 
