@@ -90,7 +90,6 @@ On most Level 1 systems, a container named ``ubuntu22.04-intel-ue-1.6.0-srw-dev.
 .. [#fn] On these systems, container testing shows inconsistent results. 
 
 .. note::
-   * On Gaea, Singularity/Apptainer is only available on the C5 partition, and therefore container use is only supported on Gaea C5. 
    * The NOAA Cloud containers are accessible only to those with EPIC resources. 
 
 Users can simply set an environment variable to point to the container: 
@@ -103,7 +102,7 @@ Users may convert the container ``.img`` file to a writable sandbox:
 
 .. code-block:: console
 
-   singularity build --sandbox ubuntu22.04-intel-srwapp $img
+   singularity build --sandbox ubuntu22.04-intel-ue-1.6.0-srw-dev $img
 
 When making a writable sandbox on Level 1 systems, the following warnings commonly appear and can be ignored:
 
@@ -123,7 +122,7 @@ On non-Level 1 systems, users should build the container in a writable sandbox:
 
 .. code-block:: console
 
-   sudo singularity build --sandbox ubuntu22.04-intel-srwapp docker://noaaepic/ubuntu22.04-intel-srwapp:develop
+   sudo singularity build --sandbox ubuntu22.04-intel-ue-1.6.0-srw-dev docker://noaaepic/ubuntu22.04-intel21.10-srw:ue160-fms202401-dev
 
 Some users may prefer to issue the command without the ``sudo`` prefix. Whether ``sudo`` is required is system-dependent. 
 
@@ -132,13 +131,13 @@ Some users may prefer to issue the command without the ``sudo`` prefix. Whether 
 
    .. code-block:: console
 
-      sudo singularity build --sandbox ubuntu22.04-intel-srwapp docker://noaaepic/ubuntu22.04-intel-srwapp:release-public-v2.2.0
+      sudo singularity build --sandbox ubuntu22.04-intel-ue-1.6.0-srw-dev docker://noaaepic/ubuntu20.04-intel-srwapp:release-public-v2.2.0
 
 For easier reference, users can set an environment variable to point to the container: 
 
 .. code-block:: console
 
-   export img=/path/to/ubuntu22.04-intel-srwapp
+   export img=/path/to/ubuntu22.04-intel-ue-1.6.0-srw-dev
 
 .. _RunContainer:
 
@@ -257,13 +256,13 @@ where:
    * ``-c`` indicates the compiler on the user's local machine (e.g., ``intel/2022.1.2``)
    * ``-m`` indicates the :term:`MPI` on the user's local machine (e.g., ``impi/2022.1.2``)
    * ``<platform>`` refers to the local machine (e.g., ``hera``, ``jet``, ``noaacloud``, ``macos``, ``linux``). See ``MACHINE`` in :numref:`Section %s <user>` for a full list of options.
-   * ``-i`` indicates the container image that was built in :numref:`Step %s <BuildC>` (``ubuntu22.04-intel-srwapp`` or ``ubuntu22.04-intel-ue-1.6.0-srw-dev.img`` by default).
+   * ``-i`` indicates the full path to the container image that was built in :numref:`Step %s <BuildC>` (``ubuntu22.04-intel-ue-1.6.0-srw-dev`` or ``ubuntu22.04-intel-ue-1.6.0-srw-dev.img`` by default).
 
 For example, on Hera, the command would be:
 
 .. code-block:: console
 
-   ./stage-srw.sh -c=intel/2022.1.2 -m=impi/2022.1.2 -p=hera -i=ubuntu22.04-intel-ue-1.6.0-srw-dev.img
+   ./stage-srw.sh -c=intel/2022.1.2 -m=impi/2022.1.2 -p=hera -i=$img
 
 .. attention::
 
